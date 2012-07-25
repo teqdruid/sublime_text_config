@@ -1,0 +1,12 @@
+[
+	{
+		"caption": "Cscope: Look up symbol",
+		"command": "cscope",
+		"args": {"mode": 0}
+	},
+    {
+        "caption": "Cscope: Jump to function definition",
+        "command": "cscope",
+		"args": {"mode": 1}
+    }
+]

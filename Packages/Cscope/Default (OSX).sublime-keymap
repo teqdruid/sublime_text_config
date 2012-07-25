@@ -1,0 +1,3 @@
+[
+    { "keys": ["super+\\"], "command": "jump_to_definition" }
+]

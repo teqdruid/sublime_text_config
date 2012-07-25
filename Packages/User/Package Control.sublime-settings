@@ -1,0 +1,35 @@
+{
+	"auto_upgrade_last_run": 1343236209,
+	"installed_packages":
+	[
+		"Alignment",
+		"All Autocomplete",
+		"BracketHighlighter",
+		"Bullet",
+		"Chuby Ninja Color Scheme",
+		"Color Scheme - Frontend Delight",
+		"Cscope",
+		"CTags",
+		"Git",
+		"GitHubinator",
+		"google-search",
+		"Goto Symbol",
+		"HTML5",
+		"IPython Integration",
+		"Modific",
+		"Package Control",
+		"Python Pep8 Lint",
+		"Search in Browser",
+		"Smart Match",
+		"SmartMarkdown",
+		"sublime-github",
+		"SublimeCodeIntel",
+		"SublimeLinter",
+		"Super Calculator",
+		"Terminal",
+		"Theme - Nexus",
+		"Theme - Nil",
+		"Theme - Soda",
+		"ZenCoding"
+	]
+}
