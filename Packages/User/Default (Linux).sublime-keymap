@@ -15,11 +15,25 @@
 		]
 	},
 
-	{ "keys": ["h"], "command": "show_overlay", "args": {"overlay": "command_palette"}, 
+	{ "keys": ["'"], "command": "show_overlay", "args": {"overlay": "command_palette"}, 
 		"context":
 		[
 			{ "key": "setting.command_mode", "operand": true},
 			{ "key": "setting.is_widget", "operand": false }
 		]
-	}
+	},
+	{ "keys": ["c"], "command": "toggle_comment", "args": { "block": false },
+		"context":
+		[
+			{ "key": "setting.command_mode", "operand": true},
+			{ "key": "setting.is_widget", "operand": false }
+		]
+	 },
+ 	{ "keys": ["g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"},
+		"context":
+		[
+			{ "key": "setting.command_mode", "operand": true},
+			{ "key": "setting.is_widget", "operand": false }
+		]
+	 }
 ]
