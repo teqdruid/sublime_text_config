@@ -1,5 +1,5 @@
 {
-	"auto_upgrade_last_run": 1343324785,
+	"auto_upgrade_last_run": 1343777856,
 	"installed_packages":
 	[
 		"Alignment",
@@ -30,6 +30,7 @@
 		"Theme - Nexus",
 		"Theme - Nil",
 		"Theme - Soda",
+		"Wrap Plus",
 		"ZenCoding"
 	]
 }
