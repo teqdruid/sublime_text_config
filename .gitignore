@@ -1,3 +1,5 @@
+/Backup
+.DS_Store
 *.pyc
 *.cache
 Settings/Auto Save Session.sublime_session
