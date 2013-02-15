@@ -18,6 +18,7 @@ def get_vcs_settings():
     return settings.get('vcs', [
         ["git", "git"],
         ["svn", "svn"],
+        ["bzr", "bzr"],
         ["hg", "hg"]
     ])
 
@@ -114,7 +115,7 @@ class CommandThread(threading.Thread):
         except OSError, e:
             if e.errno == 2:
                 main_thread(sublime.error_message,
-                    "'%s' binary could not be found in PATH\n\nConsider using the vcs_command to specify PATH\n\nPATH is: %s" % (self.command[0], os.environ['PATH']))
+                    "'%s' binary could not be found in PATH\n\nConsider using `vcs` property to specify PATH\n\nPATH is: %s" % (self.command[0], os.environ['PATH']))
             else:
                 raise e
 
@@ -207,7 +208,8 @@ class VcsCommand(object):
         return os.path.dirname(self._active_file_name())
 
     def is_enabled(self):
-        if self._active_file_name():
+        file_name = self._active_file_name()
+        if file_name and os.path.exists(file_name):
             return get_vcs(self.get_working_dir())
 
     def get_user_command(self, vcs_name):
@@ -221,7 +223,12 @@ class DiffCommand(VcsCommand):
 
     def run(self, edit):
         vcs = get_vcs(self.get_working_dir())
-        filename = os.path.basename(self.view.file_name())
+        filepath = self.view.file_name()
+        filename = os.path.basename(filepath)
+        max_file_size = settings.get('max_file_size', 1024) * 1024
+        if not os.path.exists(filepath) or os.path.getsize(filepath) > max_file_size:
+            # skip large files
+            return
         get_command = getattr(self, '{0}_diff_command'.format(vcs['name']), None)
         if get_command:
             self.run_command(get_command(filename), self.diff_done)
@@ -233,7 +240,17 @@ class DiffCommand(VcsCommand):
         return [self.get_user_command('git') or 'git', 'diff', '--no-color', '--', file_name]
 
     def svn_diff_command(self, file_name):
-        return [self.get_user_command('svn') or 'svn', 'diff', file_name]
+        params = [self.get_user_command('svn') or 'svn', 'diff']
+        if settings.get('svn_use_internal_diff', True):
+            params.append('--internal-diff')
+        if file_name.find('@') != -1:
+            file_name += '@'
+            params.extend(['--revision', 'HEAD'])
+        params.extend([file_name])
+        return params
+
+    def bzr_diff_command(self, file_name):
+        return [self.get_user_command('bzr') or 'bzr', 'diff', file_name]
 
     def hg_diff_command(self, file_name):
         return [self.get_user_command('hg') or 'hg', 'diff', file_name]
@@ -273,7 +290,7 @@ class DiffParser(object):
                 lines = []
                 for line in diff.splitlines():
                     # ignore lines with '\' at the beginning
-                    if line[0] == '\\':
+                    if line.startswith('\\'):
                         continue
 
                     matches = re.findall(re_header, line)
@@ -298,11 +315,11 @@ class DiffParser(object):
             current = chunk['start']
             deleted_line = None
             for line in chunk['lines']:
-                if line[0] == '-':
+                if line.startswith('-'):
                     if (not deleted_line or deleted_line not in deleted):
                         deleted.append(current)
                     deleted_line = current
-                elif line[0] == '+':
+                elif line.startswith('+'):
                     if deleted_line:
                         deleted.pop()
                         deleted_line = None
@@ -325,27 +342,35 @@ class DiffParser(object):
             return (lines list, start_line int, replace_lines int)
         """
 
+        # for each chunk from diff:
         for chunk in self.get_chunks():
+            # if line_num is within that chunk
             if chunk['start'] <= line_num <= chunk['end']:
                 ret_lines = []
-                current = chunk['start']
-                first = None
-                replace_lines = 0
-                return_this_lines = False
+                current = chunk['start']  # line number that corresponds to current version of file
+                first = None  # number of the first line to change
+                replace_lines = 0  # number of lines to change
+                return_this_lines = False  # flag shows whether we can return accumulated lines
                 for line in chunk['lines']:
-                    if line[0] == '-' or line[0] == '+':
+                    if line.startswith('-') or line.startswith('+'):
                         first = first or current
                         if current == line_num:
                             return_this_lines = True
-                        if line[0] == '-':
+                        if line.startswith('-'):
+                            # if line starts with '-' we have previous version
                             ret_lines.append(line[1:])
                         else:
+                            # if line starts with '+' we only increment numbers
                             replace_lines += 1
                             current += 1
                     elif return_this_lines:
                         break
                     else:
+                        # gap between modifications
+                        # reset our variables
                         current += 1
+                        first = current
+                        replace_lines = 0
                         ret_lines = []
                 if return_this_lines:
                     return ret_lines, first, replace_lines
@@ -359,7 +384,9 @@ class HlChangesCommand(DiffCommand, sublime_plugin.TextCommand):
             self.view.erase_regions(hl_key)
             return
 
-        icon = settings.get('region_icon') or 'dot'
+        icon = settings.get('region_icon') or 'modific'
+        if icon == 'modific':
+            icon = '../Modific/icons/' + hl_key
         points = [self.view.text_point(l - 1, 0) for l in lines]
         regions = [sublime.Region(p, p) for p in points]
         self.view.add_regions(hl_key, regions, "markup.%s.diff" % hl_key,
@@ -511,6 +538,9 @@ class UncommittedFilesCommand(VcsCommand, sublime_plugin.WindowCommand):
     def svn_status_command(self):
         return [self.get_user_command('svn') or 'svn', 'status', '--quiet']
 
+    def bzr_status_command(self):
+        return [self.get_user_command('bzr') or 'bzr', 'status', '-S', '--no-pending', '-V']
+
     def hg_status_command(self):
         return [self.get_user_command('hg') or 'hg', 'status']
 
@@ -520,6 +550,9 @@ class UncommittedFilesCommand(VcsCommand, sublime_plugin.WindowCommand):
 
     def svn_status_file(self, file_name):
         return file_name[8:]
+
+    def bzr_status_file(self, file_name):
+        return file_name[4:]
 
     def hg_status_file(self, file_name):
         return file_name[2:]

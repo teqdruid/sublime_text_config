@@ -1,14 +1,15 @@
     // Modific default settings
 {
     // Name of a region icon
-    // Valid icon names are dot, circle, bookmark and cross
-    "region_icon": "dot",
+    // Valid icon names are: modific, dot, circle, bookmark and cross
+    "region_icon": "modific",
 
     // You can use your commands instead of plain "git" or "svn"
     // e.g. "/usr/bin/git" or "C:\bin\git.exe"
     "vcs": [
         ["git", "git"],
         ["svn", "svn"],
+        ["bzr", "bzr"],
         ["hg" , "hg"]
     ],
 
@@ -20,5 +21,10 @@
     "debug": false,
 
     // set to false to disable automatic saving
-    "autosave": true
+    "autosave": true,
+
+    "svn_use_internal_diff": true,
+
+    // File size limit (in KB) for drawing icons on the gutter
+    "max_file_size": 1024
 }

@@ -28,12 +28,19 @@
 			{ "key": "setting.command_mode", "operand": true},
 			{ "key": "setting.is_widget", "operand": false }
 		]
-	 },
- 	{ "keys": ["g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"},
+	},
+ 	{ "keys": ["g", "g"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"},
 		"context":
 		[
 			{ "key": "setting.command_mode", "operand": true},
 			{ "key": "setting.is_widget", "operand": false }
 		]
-	 }
+	},
+  	{ "keys": ["g", "q"], "command": "wrap_lines_plus",
+		"context":
+		[
+			{ "key": "setting.command_mode", "operand": true},
+			{ "key": "setting.is_widget", "operand": false }
+		]
+	}
 ]

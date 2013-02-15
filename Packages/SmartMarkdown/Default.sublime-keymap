@@ -12,7 +12,7 @@
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
-			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*([-*]|\\d+\\.+)\\s+" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*([-+*]|\\d+\\.+)\\s+" }
 		]
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
@@ -55,28 +55,18 @@
 			  "match_all": true}
 		]
 	},
-	{ "keys": ["ctrl+c", "ctrl+n"], "command": "headline_move",
-	  "args": {"forward": true, "same_level": false}, "context":
-	  	[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
-		]
+	{
+		"keys": ["super+shift+."], "command": "change_heading_level",
+		"args": {"up": true}, "context":
+			[
+				{"key": "selector", "operator": "equal", "operand": "text.html.markdown"}
+			]
 	},
-	{ "keys": ["ctrl+c", "ctrl+p"], "command": "headline_move",
-	  "args": {"forward": false, "same_level": false}, "context":
-	  	[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
-		]
-	},
-	{ "keys": ["ctrl+c", "ctrl+f"], "command": "headline_move",
-	  "args": {"forward": true, "same_level": true}, "context":
-	  	[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
-		]
-	},
-	{ "keys": ["ctrl+c", "ctrl+b"], "command": "headline_move",
-	  "args": {"forward": false, "same_level": true}, "context":
-	  	[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
-		]
+	{
+		"keys": ["super+shift+,"], "command": "change_heading_level",
+		"args": {"up": false}, "context":
+			[
+				{"key": "selector", "operator": "equal", "operand": "text.html.markdown"}
+			]
 	}
 ]

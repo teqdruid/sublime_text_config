@@ -1,5 +1,5 @@
 {
-	"auto_upgrade_last_run": 1344482017,
+	"auto_upgrade_last_run": null,
 	"installed_packages":
 	[
 		"Alignment",
@@ -15,17 +15,16 @@
 		"google-search",
 		"Goto Symbol",
 		"HTML5",
-		"IPython Integration",
 		"Modific",
 		"Package Control",
-		"Python Pep8 Lint",
 		"Search in Browser",
 		"Smart Match",
 		"SmartMarkdown",
 		"sublime-github",
+		"SublimeBlockCursor",
 		"SublimeCodeIntel",
-		"SublimeLinter",
 		"Super Calculator",
+		"SystemVerilog",
 		"Terminal",
 		"Theme - Nexus",
 		"Theme - Nil",

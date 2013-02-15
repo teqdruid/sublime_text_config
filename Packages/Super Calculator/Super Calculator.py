@@ -1,10 +1,16 @@
 from __future__ import division
+from decimal import *
 import sublime
 import sublime_plugin
 import re
 
 
 class SuperCalculatorCommand(sublime_plugin.TextCommand):
+
+    def __init__(self, view):
+        self.view = view
+        self.settings = sublime.load_settings("Super Calculator.sublime-settings")
+
     def run(self, edit):
         regex = '(?=[0-9.]+)[0-9+\-*/.\(\)]+'
         selected_regions = self.view.sel()
@@ -15,8 +21,11 @@ class SuperCalculatorCommand(sublime_plugin.TextCommand):
                 result = str(eval(expr))
                 # round result if decimals are found
                 if '.' in result:
-                    result = round(float(result), 2)
+                    result = round(Decimal(result), self.settings.get("round_decimals"))
                 result = str(result)
+                if result.endswith('.0'):
+                    dot_pos = result.find('.')
+                    result = result[0:dot_pos]
                 self.view.replace(edit, region, result)
                 # move cursor after the result
                 result_region = self.view.sel()[-1]

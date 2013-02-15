@@ -3,7 +3,7 @@ Modific
 
 Modific is a ST2 plugin for highlighting lines changed from the last commit (you know what I mean if you used Netbeans).
 
-For now it supports **Git**, **SVN** and **Mercurial**.
+For now it supports **Git**, **SVN**, **Bazaar** and **Mercurial**.
 
 
 Install
@@ -44,7 +44,7 @@ Features / Usage
 **Highlight changes** *(automatically: on save or when window gets focus)*
 [![Highlight changes](http://i.imgur.com/FgpyRl.jpg)](http://i.imgur.com/FgpyR.jpg)
 
-**Show diff** `Ctrl+Alt+D` on Linux/Windows, `Ctlr+Super+D` on OS X
+**Show diff** `Ctrl+Alt+D` on Linux/Windows and OS X
 [![Show diff](http://i.imgur.com/csCw7l.jpg)](http://i.imgur.com/csCw7.jpg)
 
 **Preview of the commited code for current line** `Ctrl+Alt+C` on Linux/Windows, `Ctlr+Super+C` on OS X
@@ -61,6 +61,8 @@ This command reverts modifications if your cursor stays on modified line (or if 
 
 For those who expected to see a clone of Netbeans feature - unfortunately, with existing ST2 API that is impossible :(
 
+[Discussion on the forum](http://www.sublimetext.com/forum/viewtopic.php?f=5&t=7468)
+
 Configuring
 -----------
 
@@ -72,15 +74,20 @@ You can configure is a type of icon (dot, circle or bookmark) and path for your 
 
 If some sacred punishment has been bestowed upon you, and you have no other choice but to use OS, where console has non-UTF8 encoding, you can set console_encoding parameter to the name of your beloved encoding. This parameter is specifically designed for Windows XP users, who have their git repositories in folders with cyrillic path. Since russian XP uses CP1251 as default encoding (including console), VCS diff commands will be encoded appropriately, when using this parameter.
 
+If you use different than the default theme, you can customize colors of bullets on the gutter by adding [this](https://gist.github.com/3692073) chunk of code to your theme.
+
 Known issues
 ------------
 
 _Issue #9_: Sometimes disappear icons in the gutter and the tabs row.
-If you experience that, try to restart the editor (sometimes it helps).
 
 If you know exactly how to reproduce those issues, please write a comment [here](https://github.com/gornostal/Modific/issues/9).
 
 My guess is there is a bug in Sublime when plugin use `add_regions` API.
+
+**Workaround:** Change color scheme, restart sublime, switch back to your favorite color scheme. (Thanks to @owend).
+
+And please, vote for this issue on the [Sublime's bug tracker](http://sublimetext.userecho.com/topic/128369-invisible-tabs-row-icons-on-the-gutter/).
 
 License
 -------
